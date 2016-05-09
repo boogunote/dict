@@ -22,7 +22,7 @@
    "manifest_version": 2,
    "name": "有道词典Chrome划词插件",
    "options_page": "options.html",
-   "permissions": [ "<all_urls>" ],
+   "permissions": [ "<all_urls>", "tabs" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
    "version": "1.53",
    "web_accessible_resources": [ "ab20.png", "ydd-sprite.png", "speech.png" ]

@@ -343,6 +343,15 @@ body.addEventListener("mousedown",OnDictEventMouseDown, false);
 body.addEventListener("touchend",OnDictEvent, false);
 body.addEventListener("touchstart",OnDictEventMouseDown, false);
 
+function getSentence (r) {
+  var text = r.startContainer.textContent;
+  var start = r.startOffset - 1;
+  while (text.charAt(start) != '.' && text.charAt(start) != '\n' && start > 0) start--;
+  var end = r.startOffset;
+  while (text.charAt(end) != '.' && text.charAt(end) != '\n' && end < text.length) end++;
+  return text.substr(start, end-start);
+}
+
 var timer, prevC, prevO, prevWord, c ;
 var isAlpha = function(str){return /[a-zA-Z']+/.test(str)};
 var scr_flag = false;
@@ -389,7 +398,9 @@ function onScrTrans(event){
     
     prevWord = word;
 
-    
+    var sentence = getSentence(r);
+    // console.log(sentence)
+
     if (word.length >= 1){ 
 		
 		timer = setTimeout(function(){
@@ -398,7 +409,7 @@ function onScrTrans(event){
         s.removeAllRanges();
         s.addRange(tr);
         xx = event.pageX,yy = event.pageY, sx = event.screenX, sy = event.screenY;
-		getYoudaoDict(word,event.pageX,event.pageY,event.screenX,event.screenY);
+		getYoudaoDict(word,event.pageX,event.pageY,event.screenX,event.screenY,sentence);
         }, 100);
     }
 }
@@ -855,12 +866,12 @@ function onText(data)
 	 
 	createPopUpEx(data,xx,yy,sx,sy);
 }
-function getYoudaoDict(word,x,y,screenx,screeny){
+function getYoudaoDict(word,x,y,screenx,screeny,sentence){
 	
-	chrome.extension.sendRequest({'action' : 'dict' , 'word': word , 'x' : x, 'y':y , 'screenX' : screenx, 'screenY': screeny}, onText);
+	chrome.extension.sendRequest({'action' : 'dict' , 'word': word , 'x' : x, 'y':y , 'screenX' : screenx, 'screenY': screeny, 'url': window.location.href, 'sentence': sentence}, onText);
 }
 function getYoudaoTrans(word,x,y,screenx,screeny){
-	chrome.extension.sendRequest({'action' : 'translate' , 'word': word , 'x' : x, 'y':y , 'screenX' : screenx, 'screenY': screeny}, onText);
-}
+	chrome.extension.sendRequest({'action' : 'translate' , 'word': word , 'x' : x, 'y':y , 'screenX' : screenx, 'screenY': screeny, 'url': window.location.href}, onText);
+} 
 
 

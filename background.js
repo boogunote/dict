@@ -234,6 +234,7 @@ function genTable(word,strpho, baseTrans, webTrans)
 		'    <div id="yddMiddle">';
 	}
 	if (noBaseTrans == false) {
+    fmt += '<button style="display: block; width: 100%;" onclick="alert()">添加</button>';
 		var base=
 			 '  <div class="ydd-trans-wrapper" style="display:block;padding:0px 0px 0px 0px" id="yddSimpleTrans">' +
 			 '        <div class="ydd-tabs"><span class="ydd-tab">基本翻译</span></div>' +
@@ -251,6 +252,11 @@ function genTable(word,strpho, baseTrans, webTrans)
 		web = sprintf(web, webTrans);
 		fmt+=web;
 	}
+  fmt += '<input value="' + encodeURIComponent(word) + '"></input>';
+  fmt += '<textarea style="width: 100%;" rows="4" cols="50">' + sentence +
+         '</textarea>';
+  fmt += '<textarea style="width: 100%;" rows="4" cols="50">' + tablink +
+         '</textarea>';
 	if (noBaseTrans && noWebTrans) {
 		fmt += '&nbsp;&nbsp;没有英汉互译结果<br/>&nbsp;&nbsp;<a href="http://www.youdao.com/search?q=' + encodeURIComponent(word) + '&ue=utf8&keyfrom=chrome.extension" target=_blank>请尝试网页搜索</a>';
 	}
@@ -444,9 +450,15 @@ function fetchWord(word,callback) {
         xhr.send();
 		_timer = setTimeout(handleTimeout,600);
 };
+
+var tablink = null;
+var sentence = null;
+
 function onRequest(request, sender, callback) {
 	   
 	  if (request.action == 'dict') {
+      tablink = request.url;
+      sentence = request.sentence;
 	  	 if (navigator.appVersion.indexOf("Win") != -1) {
 		 	fetchWordWithoutDeskDict(request.word, callback);
 		 }
@@ -455,7 +467,8 @@ function onRequest(request, sender, callback) {
 		 }
 	  }
 	  if (request.action == 'translate') {
-		fetchTranslate(request.word, callback);
+      tablink = request.url;
+		  fetchTranslate(request.word, callback);
 	  }
 };
 
