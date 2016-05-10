@@ -25,5 +25,6 @@
    "permissions": [ "<all_urls>", "tabs" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
    "version": "1.53",
-   "web_accessible_resources": [ "ab20.png", "ydd-sprite.png", "speech.png" ]
+   "web_accessible_resources": [ "ab20.png", "ydd-sprite.png", "speech.png" ],
+   "content_security_policy": "script-src 'self' https://cdn.firebase.com https://*.firebaseio.com; object-src 'self'"
 }

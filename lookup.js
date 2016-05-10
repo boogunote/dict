@@ -347,9 +347,10 @@ function getSentence (r) {
   var text = r.startContainer.textContent;
   var start = r.startOffset - 1;
   while (text.charAt(start) != '.' && text.charAt(start) != '\n' && start > 0) start--;
+  while (!isAlpha(text.charAt(start))) start++;
   var end = r.startOffset;
   while (text.charAt(end) != '.' && text.charAt(end) != '\n' && end < text.length) end++;
-  return text.substr(start, end-start);
+  return text.substr(start, end-start+1);
 }
 
 var timer, prevC, prevO, prevWord, c ;
@@ -737,6 +738,7 @@ function createPopUp(word,senctence, x, y, screenX, screenY) {
   document.getElementById("yddTop").onmousemove = dragMove;
   document.getElementById("yddTop").onmouseover = function(e){frame.style.cursor='move';};
   document.getElementById("yddTop").onmouseout = function(e){frame.style.cursor='default';};
+  document.getElementById("add").onclick = function(e) {chrome.extension.sendRequest({'action' : 'sendData'});}
   
   if (document.getElementById("voice") != null) {
   	var speach_swf = document.getElementById("voice");
@@ -872,6 +874,4 @@ function getYoudaoDict(word,x,y,screenx,screeny,sentence){
 }
 function getYoudaoTrans(word,x,y,screenx,screeny){
 	chrome.extension.sendRequest({'action' : 'translate' , 'word': word , 'x' : x, 'y':y , 'screenX' : screenx, 'screenY': screeny, 'url': window.location.href}, onText);
-} 
-
-
+}

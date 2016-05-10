@@ -234,7 +234,7 @@ function genTable(word,strpho, baseTrans, webTrans)
 		'    <div id="yddMiddle">';
 	}
 	if (noBaseTrans == false) {
-    fmt += '<button style="display: block; width: 100%;" onclick="alert()">添加</button>';
+    fmt += '<button id="add" style="display: block; width: 100%;">添加</button>';
 		var base=
 			 '  <div class="ydd-trans-wrapper" style="display:block;padding:0px 0px 0px 0px" id="yddSimpleTrans">' +
 			 '        <div class="ydd-tabs"><span class="ydd-tab">基本翻译</span></div>' +
@@ -307,7 +307,9 @@ function translateXML(xmlnode)
 	}
 	
 	var basetrans = "";
+  var baseTransString = "";
 	var webtrans = "";
+  var webTransString = "";
  	var translations;
 	var webtranslations;
 	if (noBaseTrans == false) {
@@ -320,8 +322,10 @@ function translateXML(xmlnode)
 		var i;
 		for ( i = 0; i < translations.length - 1; i++) {
 			basetrans += '<div class="ydd-trans-container ydd-padding010">' + translations[i].getElementsByTagName("content")[0].childNodes[0].nodeValue + "</div>";
+      baseTransString += translations[i].getElementsByTagName("content")[0].childNodes[0].nodeValue + "; ";
 		}
 		basetrans += '<div class="ydd-trans-container ydd-padding010">' + translations[i].getElementsByTagName("content")[0].childNodes[0].nodeValue + "</div>";
+    baseTransString += translations[i].getElementsByTagName("content")[0].childNodes[0].nodeValue + "; ";
 	}
 	
 	if (noWebTrans == false) {
@@ -335,10 +339,23 @@ function translateXML(xmlnode)
 		for ( i = 0; i < webtranslations.length -1 ; i++) {
 			webtrans += '<div class="ydd-trans-container ydd-padding010"><a href="http://dict.youdao.com/search?q=' + encodeURIComponent(webtranslations[i].getElementsByTagName("key")[0].childNodes[0].nodeValue) + '&keyfrom=chrome.extension'+lang+'" target=_blank>' + webtranslations[i].getElementsByTagName("key")[0].childNodes[0].nodeValue + ":</a> ";
 			webtrans += webtranslations[i].getElementsByTagName("trans")[0].getElementsByTagName("value")[0].childNodes[0].nodeValue + "<br /></div>";
+      webTransString +=  webtranslations[i].getElementsByTagName("trans")[0].getElementsByTagName("value")[0].childNodes[0].nodeValue + "; ";
 		}
 		webtrans += '<div class="ydd-trans-container ydd-padding010"><a href="http://dict.youdao.com/search?q=' + encodeURIComponent(webtranslations[i].getElementsByTagName("key")[0].childNodes[0].nodeValue) + '&keyfrom=chrome.extension'+lang+'" target=_blank>' + webtranslations[i].getElementsByTagName("key")[0].childNodes[0].nodeValue + ":</a> ";
 		webtrans += webtranslations[i].getElementsByTagName("trans")[0].getElementsByTagName("value")[0].childNodes[0].nodeValue + "</div>";
+    webTransString +=  webtranslations[i].getElementsByTagName("trans")[0].getElementsByTagName("value")[0].childNodes[0].nodeValue + "; ";
 	}
+
+  itemData = {
+    'word': retphrase,
+    'strpho': strpho,
+    'basetrans': baseTransString,
+    'webtrans': webTransString,
+    'sentence': sentence,
+    'url': tablink,
+    'timestamp': Firebase.ServerValue.TIMESTAMP
+  }
+
 	return genTable(retphrase,strpho,basetrans,webtrans);
 	//return translate; 
 }
@@ -470,6 +487,9 @@ function onRequest(request, sender, callback) {
       tablink = request.url;
 		  fetchTranslate(request.word, callback);
 	  }
+    if (request.action == 'sendData') {
+      sendData();
+    }
 };
 
 
@@ -496,3 +516,31 @@ function fetchTranslate(words,callback)
 }
 
 chrome.extension.onRequest.addListener(onRequest);
+
+function loadScript(url, callback)
+{
+  // Adding the script tag to the head as suggested before
+  var head = document.getElementsByTagName('head')[0];
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = url;
+
+  // Then bind the event to the callback function.
+  // There are several events for cross browser compatibility.
+  script.onreadystatechange = callback;
+  script.onload = callback;
+
+  // Fire the loading
+  head.appendChild(script);
+}
+
+var dataRef = null;
+var itemData = null;
+
+loadScript("firebase.js", function() {
+  dataRef = new Firebase('https://boogumem.firebaseio.com/');
+});
+
+function sendData() {
+  dataRef.push(itemData);
+}
