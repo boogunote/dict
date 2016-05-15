@@ -208,6 +208,7 @@ function genTable(word,strpho, baseTrans, webTrans)
 		'</span><span style="float:right;font-weight:normal;font-size:10px"><a href="http://www.youdao.com/search?q=' +
 		encodeURIComponent(word) +
 		'&ue=utf8&keyfrom=chrome.extension" target=_blank>详细</a></span><a id="test"><span class="ydd-sp ydd-close">X</span></a></div></div>' +
+    '<button id="add" style="display: block; width: 100%;">添加</button>' +
 		'    <div id="yddMiddle">';
 	}
 	else {
@@ -231,10 +232,10 @@ function genTable(word,strpho, baseTrans, webTrans)
 		'&keyfrom=chrome.extension' +
 		lan +
 		'" target=_blank>详细</a></span><a id="test"><span class="ydd-sp ydd-close">X</span></a></div></div>' +
+    '<button id="add" style="display: block; width: 100%;">添加</button>' +
 		'    <div id="yddMiddle">';
 	}
 	if (noBaseTrans == false) {
-    fmt += '<button id="add" style="display: block; width: 100%;">添加</button>';
 		var base=
 			 '  <div class="ydd-trans-wrapper" style="display:block;padding:0px 0px 0px 0px" id="yddSimpleTrans">' +
 			 '        <div class="ydd-tabs"><span class="ydd-tab">基本翻译</span></div>' +

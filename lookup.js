@@ -343,12 +343,17 @@ body.addEventListener("mousedown",OnDictEventMouseDown, false);
 body.addEventListener("touchend",OnDictEvent, false);
 body.addEventListener("touchstart",OnDictEventMouseDown, false);
 
-function getSentence (r) {
-  var text = r.startContainer.textContent;
-  var start = r.startOffset - 1;
+function getSentence (r, word) {
+  var text = r.startContainer.textContent;;
+  if (!!r.startContainer.parentElement)
+    text = r.startContainer.parentElement.textContent;
+  if (!!r.startContainer.parentElement.parentElement && r.startContainer.parentElement.parentElement.length < 500)
+    text = r.startContainer.parentElement.parentElement.textContent;
+  var start = text.indexOf(word) - 1;
+  // var start = r.startOffset - 1;
   while (text.charAt(start) != '.' && text.charAt(start) != '\n' && start > 0) start--;
   while (!isAlpha(text.charAt(start))) start++;
-  var end = r.startOffset;
+  var end = start + 1;
   while (text.charAt(end) != '.' && text.charAt(end) != '\n' && end < text.length) end++;
   return text.substr(start, end-start+1);
 }
@@ -399,7 +404,7 @@ function onScrTrans(event){
     
     prevWord = word;
 
-    var sentence = getSentence(r);
+    var sentence = getSentence(r, word);
     // console.log(sentence)
 
     if (word.length >= 1){ 
