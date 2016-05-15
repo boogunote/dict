@@ -347,14 +347,17 @@ function getSentence (r, word) {
   var text = r.startContainer.textContent;;
   if (!!r.startContainer.parentElement)
     text = r.startContainer.parentElement.textContent;
-  if (!!r.startContainer.parentElement.parentElement && r.startContainer.parentElement.parentElement.length < 500)
+  if (!!r.startContainer.parentElement.parentElement && r.startContainer.parentElement.parentElement.textContent.length < 500)
     text = r.startContainer.parentElement.parentElement.textContent;
   var start = text.indexOf(word) - 1;
   // var start = r.startOffset - 1;
   while (text.charAt(start) != '.' && text.charAt(start) != '\n' && start > 0) start--;
-  while (!isAlpha(text.charAt(start))) start++;
+  while (!isAlpha(text.charAt(start)) && start < text.length) start++;
+  if (start >= text.length) return '';
   var end = start + 1;
   while (text.charAt(end) != '.' && text.charAt(end) != '\n' && end < text.length) end++;
+  if (end >= text.length) end = text.length;
+  if (start > end) return '';
   return text.substr(start, end-start+1);
 }
 
