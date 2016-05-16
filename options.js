@@ -332,6 +332,27 @@ function restore_options()
     
 }
 
+function login() {
+  var username = document.getElementById('username').value;
+  var password = document.getElementById('password').value;
+
+  var ref = new Firebase("https://boogumem.firebaseio.com");
+  ref.authWithPassword({
+    email    : username,
+    password : password
+  }, function(error, authData) {
+    // window.uid = authData.uid;
+    alert('ok')
+    chrome.extension.sendRequest({
+      'action' : 'uid',
+      'uid' : authData.uid
+    });
+  }, {
+    remember: "sessionOnly"
+  });
+}
+
+document.getElementById("login").onclick = function () {login();};
 document.body.onload =  function () { restore_options();document.getElementById('word').focus();changeIcon(); };
 document.getElementById("dict_disable").onclick = function () {save_options();};
 document.getElementById("ctrl_only").onclick = function () { save_options();};

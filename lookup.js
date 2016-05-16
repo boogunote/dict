@@ -344,12 +344,19 @@ body.addEventListener("touchend",OnDictEvent, false);
 body.addEventListener("touchstart",OnDictEventMouseDown, false);
 
 function getSentence (r, word) {
-  var text = r.startContainer.textContent;;
-  if (!!r.startContainer.parentElement)
-    text = r.startContainer.parentElement.textContent;
-  if (!!r.startContainer.parentElement.parentElement && r.startContainer.parentElement.parentElement.textContent.length < 500)
-    text = r.startContainer.parentElement.parentElement.textContent;
-  var start = text.indexOf(word) - 1;
+  var text = r.startContainer.textContent;
+  var element = r.startContainer;
+  while (!!element && element.textContent.length < 500) {
+    element = element.parentElement;
+  }
+  text = element.textContent;
+  // if (!!r.startContainer.parentElement)
+  //   text = r.startContainer.parentElement.textContent;
+  // if (!!r.startContainer.parentElement.parentElement && r.startContainer.parentElement.parentElement.textContent.length < 500)
+  //   text = r.startContainer.parentElement.parentElement.textContent;
+  var start1 = text.indexOf(r.startContainer.textContent);
+  var start2 = r.startContainer.textContent.indexOf(word);
+  var start = start1 + start2 - 1;
   // var start = r.startOffset - 1;
   while (text.charAt(start) != '.' && text.charAt(start) != '\n' && start > 0) start--;
   while (!isAlpha(text.charAt(start)) && start < text.length) start++;
@@ -747,6 +754,13 @@ function createPopUp(word,senctence, x, y, screenX, screenY) {
   document.getElementById("yddTop").onmouseover = function(e){frame.style.cursor='move';};
   document.getElementById("yddTop").onmouseout = function(e){frame.style.cursor='default';};
   document.getElementById("add").onclick = function(e) {chrome.extension.sendRequest({'action' : 'sendData'});}
+  // document.getElementById("login").onclick = function(e) {
+  //   chrome.extension.sendRequest({
+  //     'action' : 'login',
+  //     'username' : document.getElementById('username').value,
+  //     'password' : document.getElementById('password').value
+  //   });
+  // }
   
   if (document.getElementById("voice") != null) {
   	var speach_swf = document.getElementById("voice");

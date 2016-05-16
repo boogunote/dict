@@ -212,6 +212,8 @@ function genTable(word,strpho, baseTrans, webTrans)
 		'    <div id="yddMiddle">';
 	}
 	else {
+    var _button = '<span>请登录</span>';
+    if (!!window.uid) _button = '<button id="add" style="display: block; width: 100%;">添加</button>';
 		fmt = '<div id="yddContainer" align=left style="padding:0px 0px 0px 0px;">' +
 		'    <div id="yddTop" class="ydd-sp"><div id="yddTopBorderlr"><a href="http://dict.youdao.com/search?q=' +
 		encodeURIComponent(word) +
@@ -232,7 +234,7 @@ function genTable(word,strpho, baseTrans, webTrans)
 		'&keyfrom=chrome.extension' +
 		lan +
 		'" target=_blank>详细</a></span><a id="test"><span class="ydd-sp ydd-close">X</span></a></div></div>' +
-    '<button id="add" style="display: block; width: 100%;">添加</button>' +
+    _button +
 		'    <div id="yddMiddle">';
 	}
 	if (noBaseTrans == false) {
@@ -253,7 +255,7 @@ function genTable(word,strpho, baseTrans, webTrans)
 		web = sprintf(web, webTrans);
 		fmt+=web;
 	}
-  fmt += '<input value="' + encodeURIComponent(word) + '"></input>';
+  // fmt += '<input value="' + encodeURIComponent(word) + '"></input>';
   fmt += '<textarea style="width: 100%;" rows="4" cols="50">' + sentence +
          '</textarea>';
   fmt += '<textarea style="width: 100%;" rows="4" cols="50">' + tablink +
@@ -491,6 +493,9 @@ function onRequest(request, sender, callback) {
     if (request.action == 'sendData') {
       sendData();
     }
+    if (request.action == 'uid') {
+      window.uid = request.uid;
+    }
 };
 
 
@@ -543,5 +548,5 @@ loadScript("firebase.js", function() {
 });
 
 function sendData() {
-  dataRef.push(itemData);
+  dataRef.child(window.uid).push(itemData);
 }
