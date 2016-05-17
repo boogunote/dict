@@ -355,6 +355,7 @@ function translateXML(xmlnode)
     'basetrans': baseTransString,
     'webtrans': webTransString,
     'sentence': sentence,
+    'title': title,
     'url': tablink,
     'timestamp': Firebase.ServerValue.TIMESTAMP
   }
@@ -472,12 +473,14 @@ function fetchWord(word,callback) {
 };
 
 var tablink = null;
+var title = null
 var sentence = null;
 
 function onRequest(request, sender, callback) {
 	   
 	  if (request.action == 'dict') {
       tablink = request.url;
+      title = request.title;
       sentence = request.sentence;
 	  	 if (navigator.appVersion.indexOf("Win") != -1) {
 		 	fetchWordWithoutDeskDict(request.word, callback);
@@ -488,6 +491,7 @@ function onRequest(request, sender, callback) {
 	  }
 	  if (request.action == 'translate') {
       tablink = request.url;
+      title = request.title;
 		  fetchTranslate(request.word, callback);
 	  }
     if (request.action == 'sendData') {

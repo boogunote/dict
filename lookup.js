@@ -892,8 +892,8 @@ function onText(data)
 }
 function getYoudaoDict(word,x,y,screenx,screeny,sentence){
 	
-	chrome.extension.sendRequest({'action' : 'dict' , 'word': word , 'x' : x, 'y':y , 'screenX' : screenx, 'screenY': screeny, 'url': window.location.href, 'sentence': sentence}, onText);
+	chrome.extension.sendRequest({'action' : 'dict' , 'word': word , 'x' : x, 'y':y , 'screenX' : screenx, 'screenY': screeny, 'title': document.title, 'url': window.location.href, 'sentence': sentence}, onText);
 }
 function getYoudaoTrans(word,x,y,screenx,screeny){
-	chrome.extension.sendRequest({'action' : 'translate' , 'word': word , 'x' : x, 'y':y , 'screenX' : screenx, 'screenY': screeny, 'url': window.location.href}, onText);
+	chrome.extension.sendRequest({'action' : 'translate' , 'word': word , 'x' : x, 'y':y , 'screenX' : screenx, 'screenY': screeny, 'title': document.title, 'url': window.location.href}, onText);
 }
