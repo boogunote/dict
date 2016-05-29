@@ -95,7 +95,7 @@ function translateXML(xmlnode){
 			var pho = root.getElementsByTagName("phonetic-symbol")[0].childNodes[0].nodeValue;
 		
 		if (pho != null) {
-			strpho = "&nbsp;[" + pho + "]";
+			strpho = "[" + pho + "]";
 		}
 	}
 	
@@ -336,7 +336,7 @@ function login() {
   var username = document.getElementById('username').value;
   var password = document.getElementById('password').value;
 
-  var ref = new Firebase("https://boogumem.firebaseio.com");
+  var ref = new Wilddog("https://bn.wilddogio.com/");
   ref.authWithPassword({
     email    : username,
     password : password

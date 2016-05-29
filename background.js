@@ -296,7 +296,7 @@ function translateXML(xmlnode)
 			var pho = root.getElementsByTagName("phonetic-symbol")[0].childNodes[0].nodeValue;
 		
 		if (pho != null) {
-			strpho = "&nbsp;[" + pho + "]";
+			strpho = "[" + pho + "]";
 		}
 	}
 	
@@ -357,7 +357,7 @@ function translateXML(xmlnode)
     'sentence': sentence,
     'title': title,
     'url': tablink,
-    'timestamp': Firebase.ServerValue.TIMESTAMP
+    'timestamp': Wilddog.ServerValue.TIMESTAMP
   }
 
 	return genTable(retphrase,strpho,basetrans,webtrans);
@@ -547,10 +547,10 @@ function loadScript(url, callback)
 var dataRef = null;
 var itemData = null;
 
-loadScript("firebase.js", function() {
-  dataRef = new Firebase('https://boogumem.firebaseio.com/');
+loadScript("wilddog.js", function() {
+  dataRef = new Wilddog('https://bn.wilddogio.com/');
 });
 
 function sendData() {
-  dataRef.child(window.uid).push(itemData);
+  dataRef.child(window.uid).child('/bnword/items/').push(itemData);
 }
